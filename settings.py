@@ -44,6 +44,9 @@ class Config(object):
         SQLALCHEMY_DATABASE_URI += f":{DATABASE_PORT}"
         SQLALCHEMY_DATABASE_URI += f"/{DATABASE_DB}"
 
+    # Others
+    SERVICE_PRODUCTS = os.getenv("SERVICE_PRODUCTS", "http://challenge-api.luizalabs.com/api/product")
+
 
 class Development(Config):
     ENVIRONMENT_NAME = os.getenv("ENVIRONMENT_NAME", "DESENVOLVIMENTO")
