@@ -16,19 +16,21 @@ class ClientController:
     def get_all(self, args: dict):
         try:
             query = db.session.query(ClientModel)
-            data = query.paginate(page=int(args.get('page', 1)), per_page=10, max_per_page=100)
+            data = query.paginate(page=int(args.get('page', 1)), per_page=int(args.get('limit', 10)), max_per_page=100)
 
             return self._response.send(
                 status=HTTPStatus.OK,
                 data=data,
                 schema=ClientSchema(many=True),
+                code="success",
+                message="Clients found successfully"
             )
         except Exception as e:
             raise e
 
     def get_one(self, _id: str):
         try:
-            data = db.session.query(ClientModel).first()
+            data = db.session.query(ClientModel).filter(ClientModel.id == _id).first()
             if not data:
                 return self._response.send(
                     message=f"Client '{_id}' not found",
@@ -75,6 +77,23 @@ class ClientController:
                 status=HTTPStatus.OK,
                 code="success",
                 message="Client updated",
+            )
+        except Exception as e:
+            db.session.rollback()
+            raise e
+        finally:
+            db.session.close()
+
+    def delete(self, _id: str):
+        try:
+            db.session.query(ClientModel).filter(ClientModel.id == _id).delete()
+            db.session.commit()
+
+            return self._response.send(
+                data=None,
+                status=HTTPStatus.NO_CONTENT,
+                code="success",
+                message="Client deleted",
             )
         except Exception as e:
             db.session.rollback()

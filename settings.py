@@ -20,7 +20,7 @@ class Config(object):
     SWAGGER_DESCRIPTION = os.getenv(
         "SWAGGER_DESCRIPTION", "This service is responsible for the lots"
     )
-    SWAGGER_UI_DOC_EXPANSION = None  # None, "list", "full"
+    SWAGGER_UI_DOC_EXPANSION = "list"  # None, "list", "full"
     RESTPLUS_VALIDATE = False
     RESTPLUS_MASK_SWAGGER = False
     ERROR_INCLUDE_MESSAGE = False

@@ -16,8 +16,10 @@ class ClientHandler:
         return self._controller.get_all(args=args)
 
     def get_one(self, _id: str):
-        args = request.args.to_dict()
-        return self._controller.get_one(_id=_id, args=args)
+        return self._controller.get_one(_id=_id)
+
+    def delete(self, _id: str):
+        return self._controller.delete(_id=_id)
 
     def post(self):
         body = request.get_json(silent=True, force=True)
