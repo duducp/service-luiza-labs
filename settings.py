@@ -16,7 +16,7 @@ class Config(object):
     SECRET_KEY = os.getenv("SECRET_KEY", "e6cf6d81-a23c-4712-96c8-c8e6c79cf11f")
 
     # Restplus
-    SWAGGER_TITLE = os.getenv("SWAGGER_TITLE", "Lot")
+    SWAGGER_TITLE = os.getenv("SWAGGER_TITLE", "Service Client Luiza Labs")
     SWAGGER_DESCRIPTION = os.getenv(
         "SWAGGER_DESCRIPTION", "This service is responsible for the lots"
     )
@@ -32,7 +32,7 @@ class Config(object):
     DATABASE_PORT = int(os.getenv("DATABASE_PORT", "5432"))
     DATABASE_USER = os.getenv("DATABASE_USER", "postgres")
     DATABASE_PW = os.getenv("DATABASE_PW", "postgres")
-    DATABASE_DB = os.getenv("DATABASE_DB", "xtracelot")
+    DATABASE_DB = os.getenv("DATABASE_DB", "luizalabs")
 
     if DATABASE_ENGINE.lower() == "sqlite":
         SQLALCHEMY_DATABASE_URI = "sqlite:///app.db"
