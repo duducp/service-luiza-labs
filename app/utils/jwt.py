@@ -88,15 +88,11 @@ class JwtUtils:
     def decode(self, token, verify=True):
         try:
             if verify:
-                payload = jwt.decode(
+                return jwt.decode(
                     jwt=token, key=self._public_key, verify=verify, algorithm=["RS256"]
                 )
             else:
-                payload = jwt.decode(jwt=token, verify=verify)
-            return payload
-        except jwt.DecodeError as e:
-            logger.error("Error decoding the token: {}".format(str(e)))
-            raise Exception("ERROR: Error decoding the token")
+                return jwt.decode(jwt=token, verify=verify)
         except jwt.ExpiredSignature:
             return None
         except jwt.InvalidTokenError:
@@ -126,13 +122,12 @@ class JwtUtils:
             if not payload:
                 return {}
 
+            key = payload.get("jti_refresh")
             if payload.get("type") == "access_token":
                 key = payload.get("jti_access")
-            else:
-                key = payload.get("jti_refresh")
 
             tokens_redis = self._redis.get(name=key, key=key)
-            if not tokens_redis or not json.loads(tokens_redis).get("valid"):
+            if not all([tokens_redis, json.loads(tokens_redis).get("valid")]):
                 return {}
 
             return payload
