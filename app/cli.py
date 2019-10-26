@@ -14,7 +14,7 @@ def configuration(app):
     def config():
         """Commands with project settings"""
 
-    @config.command("create-database")
+    @config.command("create-db")
     @click.argument("name")
     def create_database(name):
         """

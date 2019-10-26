@@ -18,7 +18,8 @@ class Config(object):
     # Restplus
     SWAGGER_TITLE = os.getenv("SWAGGER_TITLE", "Service Client Luiza Labs")
     SWAGGER_DESCRIPTION = os.getenv(
-        "SWAGGER_DESCRIPTION", "This service is responsible for the lots"
+        "SWAGGER_DESCRIPTION",
+        "This service is responsible for taking care of customers' favorite products",
     )
     SWAGGER_UI_DOC_EXPANSION = "list"  # None, "list", "full"
     RESTPLUS_VALIDATE = False

@@ -6,7 +6,7 @@ from app.restplus import api
 from app.schemas.routes.client_schema import ClientSchemaRoute
 from app.schemas.routes.favorite_schema import FavoritesSchemaRoute
 
-ns = api.namespace(path="/clients", name="Clients", description="CRUD of the Clients.")
+ns = api.namespace(path="/clients", name="Clients")
 
 schema = ClientSchemaRoute()
 schema_favorite = FavoritesSchemaRoute()
@@ -186,7 +186,7 @@ class ClientIdFavoriteDetails(Resource):
     @api.doc(security=True, parser=pagination_client)
     def get(self, client_id):
         """
-        Get all favorites to client
+        Get all clients favorites and product details
         """
         return self.handler.get_all_by_client_details_product(client_id=client_id)
 
