@@ -26,7 +26,8 @@ api = MyApi(
     description=_config.SWAGGER_DESCRIPTION,
     doc=_doc,
     ordered=True,
-    catch_all_404s=True,
+    catch_all_404s=False,
+    contact="duducp2013@gmail.com",
     security=["authorization"],
     authorizations={
         "authorization": {
