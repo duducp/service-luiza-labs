@@ -1,5 +1,6 @@
 from flask_restplus import Resource
 
+from app.decorators.auth import valid_token
 from app.handlers.client_handler import ClientHandler
 from app.handlers.favorite_handler import FavoriteHandler
 from app.restplus import api
@@ -76,6 +77,7 @@ class ClientItem(Resource):
 
     @api.response(code=200, model=schema.response_client, description="success")
     @api.doc(security=True)
+    @valid_token
     def get(self, client_id):
         """
         Returns one registered client
@@ -84,6 +86,7 @@ class ClientItem(Resource):
 
     @api.response(code=200, model=schema.response_client, description="success")
     @api.doc(security=True, body=schema.client_item)
+    @valid_token
     def put(self, client_id):
         """
         Update one client and all required fields must be entered
@@ -92,6 +95,7 @@ class ClientItem(Resource):
 
     @api.response(code=200, description="success")
     @api.doc(security=True, body=schema.client_item)
+    @valid_token
     def patch(self, client_id):
         """
         Update one client and you do not need to enter all fields
@@ -100,6 +104,7 @@ class ClientItem(Resource):
 
     @api.response(code=204, description="success")
     @api.doc(security=True)
+    @valid_token
     def delete(self, client_id):
         """
         Delete one client
@@ -120,6 +125,7 @@ class ClientCollection(Resource):
         code=200, model=schema.response_pagination_client, description="success"
     )
     @api.doc(security=True, parser=pagination_client)
+    @valid_token
     def get(self):
         """
         Returns registered clients
@@ -128,6 +134,7 @@ class ClientCollection(Resource):
 
     @api.response(code=201, model=schema.response_client, description="success")
     @api.doc(security=True, body=schema.client_item)
+    @valid_token
     def post(self):
         """
         Create one client
@@ -151,6 +158,7 @@ class ClientIdFavorite(Resource):
         description="success",
     )
     @api.doc(security=True, parser=pagination_client)
+    @valid_token
     def get(self, client_id):
         """
         Get all favorites to client
@@ -161,6 +169,7 @@ class ClientIdFavorite(Resource):
         code=201, model=schema_favorite.response_favorite, description="success"
     )
     @api.doc(security=True, body=schema_favorite.favorite_item)
+    @valid_token
     def post(self, client_id):
         """
         Create favorite to client
@@ -184,6 +193,7 @@ class ClientIdFavoriteDetails(Resource):
         description="success",
     )
     @api.doc(security=True, parser=pagination_client)
+    @valid_token
     def get(self, client_id):
         """
         Get all clients favorites and product details
@@ -203,6 +213,7 @@ class ClientIdFavoriteId(Resource):
 
     @api.response(code=204, description="success")
     @api.doc(security=True)
+    @valid_token
     def delete(self, client_id, favorite_id):
         """
         Delete one favorite
