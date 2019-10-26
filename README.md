@@ -4,12 +4,18 @@ Este serviço é responsável por armazenar quais são os produtos favoritos de 
 
 Todas as rotas são protegidas por um token JWT, este que deve ser obtido na rota de login.
 
-## Requisitos
+**Índice**
+1. [Requisitos](#cs0)
+2. [Informações adicionais](#cs1)
+3. [Configuração do ambiente](#cs2)
+4. [Comandos úteis](#cs3)
+
+## Requisitos <a name="cs0"></a>
 - Python 3.x
 - Postgres
 - Redis
 
-## Informações adicionais
+## Informações adicionais <a name="cs1"></a>
 O arquivo `.env.example` serve para setar variáveis de ambiente em modo de desenvolvimento ou teste.
 Para que haja efeito deve-se renomear o arquivo para `.env`.
 
@@ -17,7 +23,7 @@ O banco de dados padrão para armazenamento dos dados é o `postgres`.
 
 Todo o projeto segue um padrão pré definido pelo pre-commit.
 
-## Configuração do ambiente <a name="cs1"></a>
+## Configuração do ambiente <a name="cs2"></a>
 Iniciar ambiente virtual
 ````bash
 python -m venv venv
@@ -57,7 +63,7 @@ Acessar a documentação (não disponível para o modo de produção)
 http://localhost:5000/docs
 ````
 
-#### Comandos úteis
+#### Comandos úteis <a name="cs3"></a>
 Rodar o lint para organização do código
 ````bash
 flask db commands lint
