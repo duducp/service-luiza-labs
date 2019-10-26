@@ -18,6 +18,39 @@ class FavoritesSchemaRoute:
             {
                 "id": fields.String(readonly=True),
                 "product_id": fields.String(required=True),
+                "client_id": fields.String(readonly=True),
+            },
+        )
+
+    @property
+    def product_item(self):
+        """
+        Serializer dos produtos
+        """
+        return api.model(
+            "Product",
+            {
+                "id": fields.String(readonly=True),
+                "title": fields.String(readonly=True),
+                "reviewScore": fields.Integer(readonly=True),
+                "price": fields.Integer(readonly=True),
+                "image": fields.String(readonly=True),
+                "brand": fields.String(readonly=True),
+            },
+        )
+
+    @property
+    def favorite_product_item(self):
+        """
+        Serializer dos produtos favoritos dos clientes
+        """
+        return api.inherit(
+            f"{self._name}Product",
+            {
+                "id": fields.String(readonly=True),
+                "product_id": fields.String(required=True),
+                "client_id": fields.String(readonly=True),
+                "product": fields.Nested(self.product_item),
             },
         )
 
@@ -36,8 +69,8 @@ class FavoritesSchemaRoute:
         Serializer de resposta com paginação dos produtos favoritos
         """
         return response_serializer(
-            data=self.favorite_item,
-            name_model=f"{self._name}ResponsePagination",
-            name_model_pagination=f"{self._name}Pagination",
+            data=self.favorite_product_item,
+            name_model=f"{self._name}ProductResponsePagination",
+            name_model_pagination=f"{self._name}ProductPagination",
             pagination=True,
         )
