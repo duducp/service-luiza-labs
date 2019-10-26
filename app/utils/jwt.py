@@ -15,7 +15,7 @@ class JwtUtils:
         self._public_key = self._get_public_key()
         self._now = datetime.now()
         self._config = settings.load_config()
-        self._redis = RedisPersistence()
+        self._redis = RedisPersistence(db=self._config.REDIS_DB_AUTH)
 
     def generate_access_and_refresh_token(self, client_id: str) -> dict:
         jti_access = str(uuid4())

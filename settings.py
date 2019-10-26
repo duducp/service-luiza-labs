@@ -48,6 +48,7 @@ class Config(object):
     # Redis
     REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
     REDIS_PORT = os.getenv("REDIS_PORT", "6379")
+    REDIS_DB_AUTH = int(os.getenv("REDIS_DB_AUTH", "0"))
 
     # Others
     SERVICE_PRODUCTS = os.getenv(
