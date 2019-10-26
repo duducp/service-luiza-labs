@@ -20,6 +20,27 @@ class FavoriteController:
             query = db.session.query(FavoriteModel).filter(
                 FavoriteModel.client_id == client_id
             )
+            data = query.paginate(
+                page=int(args.get("page", 1)),
+                per_page=int(args.get("limit", 10)),
+                max_per_page=100,
+            )
+
+            return self._response.send(
+                schema=FavoriteSchema(many=True),
+                status=HTTPStatus.OK,
+                data=data,
+                code="success",
+                message="Favorites found successfully",
+            )
+        except Exception as e:
+            raise e
+
+    def get_all_by_client_details_product(self, client_id: str, args: dict):
+        try:
+            query = db.session.query(FavoriteModel).filter(
+                FavoriteModel.client_id == client_id
+            )
             data_pagination = query.paginate(
                 page=int(args.get("page", 1)),
                 per_page=int(args.get("limit", 10)),

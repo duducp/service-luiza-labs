@@ -69,6 +69,18 @@ class FavoritesSchemaRoute:
         Serializer de resposta com paginação dos produtos favoritos
         """
         return response_serializer(
+            data=self.favorite_item,
+            name_model=f"{self._name}ResponsePagination",
+            name_model_pagination=f"{self._name}Pagination",
+            pagination=True,
+        )
+
+    @property
+    def response_pagination_favorite_details(self):
+        """
+        Serializer de resposta com paginação dos produtos favoritos
+        """
+        return response_serializer(
             data=self.favorite_product_item,
             name_model=f"{self._name}ProductResponsePagination",
             name_model_pagination=f"{self._name}ProductPagination",

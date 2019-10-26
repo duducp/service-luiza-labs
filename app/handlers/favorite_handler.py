@@ -19,6 +19,12 @@ class FavoriteHandler:
         args = request.args.to_dict()
         return self._controller.get_all_by_client(args=args, client_id=client_id)
 
+    def get_all_by_client_details_product(self, client_id: str):
+        args = request.args.to_dict()
+        return self._controller.get_all_by_client_details_product(
+            args=args, client_id=client_id
+        )
+
     def delete(self, _id: str, client_id: str):
         favorite = (
             db.session.query(FavoriteModel)

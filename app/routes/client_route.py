@@ -168,6 +168,29 @@ class ClientIdFavorite(Resource):
         return self.handler.post(client_id=client_id)
 
 
+@ns.route("/<client_id>/favorites/details")
+@api.expect(parser_client_id)
+@api.response(code=400, description="bad_request")
+@api.response(code=404, description="not_found")
+@api.response(code=500, description="internal_error")
+class ClientIdFavoriteDetails(Resource):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.handler = FavoriteHandler()
+
+    @api.response(
+        code=200,
+        model=schema_favorite.response_pagination_favorite_details,
+        description="success",
+    )
+    @api.doc(security=True, parser=pagination_client)
+    def get(self, client_id):
+        """
+        Get all favorites to client
+        """
+        return self.handler.get_all_by_client_details_product(client_id=client_id)
+
+
 @ns.route("/<client_id>/favorites/<favorite_id>")
 @api.expect(parser_client_favorite_id)
 @api.response(code=400, description="bad_request")
