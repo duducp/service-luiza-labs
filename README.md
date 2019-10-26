@@ -21,7 +21,7 @@ Todas as rotas são protegidas por um token JWT, este que deve ser obtido na rot
 O arquivo `.env.example` serve para setar variáveis de ambiente em modo de desenvolvimento ou teste.
 Para que haja efeito deve-se renomear o arquivo para `.env`.
 
-O banco de dados padrão para armazenamento dos dados é o `postgres`.
+O banco de dados padrão para armazenamento dos dados é o `postgres` e `redis`.
 
 Após fazer a configuração inicial, pode-se acessar as rotas do projeto pela URL `http://localhost:5000/docs`
 

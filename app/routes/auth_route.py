@@ -23,7 +23,7 @@ schema_client = ClientSchemaRoute()
 class Login(Resource):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.auth = AuthHandler()
+        self.handler = AuthHandler()
 
     @api.response(code=201, model=schema.auth_response_final, description="success")
     @api.expect(schema.auth_request)
@@ -31,7 +31,7 @@ class Login(Resource):
         """
         Log in to the system
         """
-        return self.auth.login()
+        return self.handler.login()
 
 
 @ns.route("/register")
@@ -41,7 +41,7 @@ class Login(Resource):
 class Register(Resource):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.auth = ClientHandler()
+        self.handler = ClientHandler()
 
     @api.response(code=201, model=schema_client.response_client, description="success")
     @api.doc(security=False, body=schema_client.client_item)
@@ -58,7 +58,7 @@ class Register(Resource):
 class Logout(Resource):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.auth = AuthHandler()
+        self.handler = AuthHandler()
 
     @api.response(code=204, description="success")
     @api.doc(security=["authorization"])
@@ -66,7 +66,7 @@ class Logout(Resource):
         """
         Log out of the system
         """
-        return self.auth.logout()
+        return self.handler.logout()
 
 
 @ns.route("/refresh")
@@ -76,7 +76,7 @@ class Logout(Resource):
 class Refresh(Resource):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.auth = AuthHandler()
+        self.handler = AuthHandler()
 
     @api.response(code=201, model=schema.auth_response_final, description="success")
     @api.doc(security=["authorization"])
@@ -84,7 +84,7 @@ class Refresh(Resource):
         """
         Renew user token
         """
-        return self.auth.refresh()
+        return self.handler.refresh()
 
 
 @ns.route("/valid")
@@ -94,7 +94,7 @@ class Refresh(Resource):
 class ValidToken(Resource):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.auth = AuthHandler()
+        self.handler = AuthHandler()
 
     @api.response(code=204, description="success")
     @api.doc(security=["authorization"])
@@ -102,4 +102,4 @@ class ValidToken(Resource):
         """
         Checks if the token is valid
         """
-        return self.auth.valid()
+        return self.handler.valid()
