@@ -27,8 +27,15 @@ api = MyApi(
     doc=_doc,
     ordered=True,
     catch_all_404s=True,
-    security=[],
-    authorizations={},
+    security=["authorization"],
+    authorizations={
+        "authorization": {
+            "type": "apiKey",
+            "in": "header",
+            "name": "Authorization",
+            "description": "User token used for API access.",
+        }
+    },
 )
 
 

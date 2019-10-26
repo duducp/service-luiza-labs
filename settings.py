@@ -45,10 +45,17 @@ class Config(object):
         SQLALCHEMY_DATABASE_URI += f":{DATABASE_PORT}"
         SQLALCHEMY_DATABASE_URI += f"/{DATABASE_DB}"
 
+    # Redis
+    REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+    REDIS_PORT = os.getenv("REDIS_PORT", "6379")
+
     # Others
     SERVICE_PRODUCTS = os.getenv(
         "SERVICE_PRODUCTS", "http://challenge-api.luizalabs.com/api/product"
     )
+
+    TOKEN_ACCESS_EXP_MINUTES = int(os.getenv("TOKEN_ACCESS_EXP_MINUTES", "10"))
+    TOKEN_REFRESH_EXP_MINUTES = int(os.getenv("TOKEN_REFRESH_EXP_MINUTES", "30"))
 
 
 class Development(Config):

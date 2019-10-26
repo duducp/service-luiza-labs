@@ -75,11 +75,6 @@ Rodar o teste de complexidade do código
 flask db commands complexity
 ````
 
-Rodar os cenários de testes
-````bash
-flask db commands test
-````
-
 Criar um database no Postgres
 ````bash
 flask db config create-db NOME_DATABASE
