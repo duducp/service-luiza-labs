@@ -9,7 +9,8 @@ Todas as rotas são protegidas por um token JWT, este que deve ser obtido na rot
 2. [Informações adicionais](#cs1)
 3. [Configuração do ambiente](#cs2)
 4. [Comandos úteis](#cs3)
-4. [Tecnologias utilizadas](#cs4)
+5. [Tecnologias utilizadas](#cs4)
+6. [Imagens](#cs5)
 
 ## Requisitos <a name="cs0"></a>
 - Python 3.x
@@ -101,8 +102,7 @@ Rodar aplicação
 flask run
 ````
 
-## Técnologias utilizadas
-
+## Técnologias utilizadas <a name="cs4"></a>
 - Python: linguagem de programação utilizada no desenvolvimento do serviço;
 - Postgres: banco de dados relacional utilizado para armazenar os dados;
 - Git: tecnologia para controle de versão do código;
@@ -113,3 +113,6 @@ flask run
 - Requests: biblioteca para realização de chamadas em outros sites/api's;
 - Radon: biblioteca para verificar a complexidade dos códigos;
 - Pre-commit: biblioteca que define os padrões do PEP 8, quando é feito um commit;
+
+## Imagens <a name="cs5"></a>
+![Alt text](/doc.png "Documentação da aplicação")
