@@ -23,6 +23,7 @@ class ClientHandler:
 
     def post(self):
         body = request.get_json(silent=True, force=True)
+
         data, errors = ClientSchema().load(data=body)
         if errors:
             return self._response.send(
@@ -43,7 +44,6 @@ class ClientHandler:
             partial=partial,
             many=False,
         )
-
         if errors:
             return self._response.send(
                 data=errors,
@@ -54,7 +54,7 @@ class ClientHandler:
 
         if not data.id:
             return self._response.send(
-                message=f"item '{_id}' not found", status=404, code="item_not_found"
+                message=f"client '{_id}' not found", status=404, code="not_found"
             )
 
         return self._controller.put(_id=_id, data=data)

@@ -15,15 +15,21 @@ class FavoriteController:
 
     def get_all_by_client(self, client_id: str, args: dict):
         try:
-            query = db.session.query(FavoriteModel).filter(FavoriteModel.client_id == client_id)
-            data = query.paginate(page=int(args.get('page', 1)), per_page=int(args.get('limit', 10)), max_per_page=100)
+            query = db.session.query(FavoriteModel).filter(
+                FavoriteModel.client_id == client_id
+            )
+            data = query.paginate(
+                page=int(args.get("page", 1)),
+                per_page=int(args.get("limit", 10)),
+                max_per_page=100,
+            )
 
             return self._response.send(
                 status=HTTPStatus.OK,
                 data=data,
                 schema=FavoriteSchema(many=True),
                 code="success",
-                message="Favorites found successfully"
+                message="Favorites found successfully",
             )
         except Exception as e:
             raise e
@@ -48,7 +54,12 @@ class FavoriteController:
 
     def delete(self, _id: str, client_id: str):
         try:
-            query = db.session.query(FavoriteModel).filter(FavoriteModel.id == _id).filter(FavoriteModel.client_id == client_id).delete()
+            (
+                db.session.query(FavoriteModel)
+                .filter(FavoriteModel.id == _id)
+                .filter(FavoriteModel.client_id == client_id)
+                .delete()
+            )
             db.session.commit()
 
             return self._response.send(

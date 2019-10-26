@@ -6,9 +6,7 @@ from app.restplus import api
 from app.schemas.routes.client_schema import ClientSchemaRoute
 from app.schemas.routes.favorite_schema import FavoritesSchemaRoute
 
-ns = api.namespace(
-    path="/clients", name="Clients", description="CRUD of the Clients."
-)
+ns = api.namespace(path="/clients", name="Clients", description="CRUD of the Clients.")
 
 schema = ClientSchemaRoute()
 schema_favorite = FavoritesSchemaRoute()
@@ -118,7 +116,9 @@ class ClientCollection(Resource):
         super().__init__(*args, **kwargs)
         self.handler = ClientHandler()
 
-    @api.response(code=200, model=schema.response_pagination_client, description="success")
+    @api.response(
+        code=200, model=schema.response_pagination_client, description="success"
+    )
     @api.doc(security=True, parser=pagination_client)
     def get(self):
         """
@@ -145,7 +145,11 @@ class ClientIdFavorite(Resource):
         super().__init__(*args, **kwargs)
         self.handler = FavoriteHandler()
 
-    @api.response(code=200, model=schema_favorite.response_pagination_favorite, description="success")
+    @api.response(
+        code=200,
+        model=schema_favorite.response_pagination_favorite,
+        description="success",
+    )
     @api.doc(security=True, parser=pagination_client)
     def get(self, client_id):
         """
@@ -153,7 +157,9 @@ class ClientIdFavorite(Resource):
         """
         return self.handler.get_all_by_client(client_id=client_id)
 
-    @api.response(code=201, model=schema_favorite.response_favorite, description="success")
+    @api.response(
+        code=201, model=schema_favorite.response_favorite, description="success"
+    )
     @api.doc(security=True, body=schema_favorite.favorite_item)
     def post(self, client_id):
         """

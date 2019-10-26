@@ -1,0 +1,34 @@
+exclude: |
+  (?x)(
+      ^migrations/|
+      ^.git/|
+      ^venv/|
+      ^pipeline/
+  )
+repos:
+  - repo: https://github.com/ambv/black
+    rev: stable
+    hooks:
+      - id: black
+        language_version: python3.7
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    sha: v2.2.3
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: check-symlinks
+      - id: debug-statements
+      - id: flake8
+      - id: requirements-txt-fixer
+      - id: check-added-large-files
+
+  - repo: https://github.com/humitos/mirrors-autoflake
+    rev: v1.1
+    hooks:
+      - id: autoflake
+        args: ['--in-place', '--remove-all-unused-imports', '--remove-unused-variable']

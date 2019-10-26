@@ -16,14 +16,18 @@ class ClientController:
     def get_all(self, args: dict):
         try:
             query = db.session.query(ClientModel)
-            data = query.paginate(page=int(args.get('page', 1)), per_page=int(args.get('limit', 10)), max_per_page=100)
+            data = query.paginate(
+                page=int(args.get("page", 1)),
+                per_page=int(args.get("limit", 10)),
+                max_per_page=100,
+            )
 
             return self._response.send(
                 status=HTTPStatus.OK,
                 data=data,
                 schema=ClientSchema(many=True),
                 code="success",
-                message="Clients found successfully"
+                message="Clients found successfully",
             )
         except Exception as e:
             raise e

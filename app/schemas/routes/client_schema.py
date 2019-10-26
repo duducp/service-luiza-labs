@@ -13,11 +13,14 @@ class ClientSchemaRoute:
         """
         Serializer do cliente
         """
-        return api.model(f"{self._name}", {
-            "id": fields.String(readonly=True),
-            "name": fields.String(required=True),
-            "email": fields.String(required=True),
-        })
+        return api.model(
+            f"{self._name}",
+            {
+                "id": fields.String(readonly=True),
+                "name": fields.String(required=True),
+                "email": fields.String(required=True),
+            },
+        )
 
     @property
     def response_client(self):

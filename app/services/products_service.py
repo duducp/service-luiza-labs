@@ -14,7 +14,9 @@ class ProductService:
             headers = {"Content-Type": "application/json"}
 
             r = self._requests.get(
-                url=f'{self._config.SERVICE_PRODUCTS}/{_id}', headers=headers, timeout=10
+                url=f"{self._config.SERVICE_PRODUCTS}/{_id}",
+                headers=headers,
+                timeout=10,
             )
             return r
         except requests.exceptions.Timeout:
@@ -29,7 +31,9 @@ class ProductService:
             headers = {"Content-Type": "application/json"}
 
             r = self._requests.get(
-                url=f'{self._config.SERVICE_PRODUCTS}?page={page}', headers=headers, timeout=10
+                url=f"{self._config.SERVICE_PRODUCTS}?page={page}",
+                headers=headers,
+                timeout=10,
             )
             return r
         except requests.exceptions.Timeout:

@@ -20,7 +20,12 @@ class FavoriteHandler:
         return self._controller.get_all_by_client(args=args, client_id=client_id)
 
     def delete(self, _id: str, client_id: str):
-        favorite = db.session.query(FavoriteModel).filter(FavoriteModel.id == _id).filter(FavoriteModel.client_id == client_id).first()
+        favorite = (
+            db.session.query(FavoriteModel)
+            .filter(FavoriteModel.id == _id)
+            .filter(FavoriteModel.client_id == client_id)
+            .first()
+        )
         if not favorite:
             return self._response.send(
                 status=404,
@@ -32,7 +37,7 @@ class FavoriteHandler:
 
     def post(self, client_id: str):
         body = request.get_json(silent=True, force=True)
-        body['client_id'] = client_id
+        body["client_id"] = client_id
 
         data, errors = FavoriteSchema().load(data=body)
         if errors:
@@ -52,14 +57,14 @@ class FavoriteHandler:
                     code="product_not_found",
                 )
             elif product.status_code != 200:
-                logger.error(f"Status code returned when fetching the product was {product.status_code}: {product.text}")
+                logger.error(
+                    f"Status code returned when fetching the product was {product.status_code}: {product.text}"
+                )
                 raise Exception("Failed to register favorite product")
         except Exception as e:
             logger.error(str(e))
             return self._response.send(
-                status=500,
-                message=str(e),
-                code="internal_error",
+                status=500, message=str(e), code="internal_error"
             )
 
         return self._controller.post(data=data)

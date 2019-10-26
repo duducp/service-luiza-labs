@@ -13,10 +13,13 @@ class FavoritesSchemaRoute:
         """
         Serializer dos produtos favoritos dos clientes
         """
-        return api.model(f"{self._name}", {
-            "id": fields.String(readonly=True),
-            "product_id": fields.String(required=True),
-        })
+        return api.model(
+            f"{self._name}",
+            {
+                "id": fields.String(readonly=True),
+                "product_id": fields.String(required=True),
+            },
+        )
 
     @property
     def response_favorite(self):
