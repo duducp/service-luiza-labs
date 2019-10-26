@@ -1,26 +1,54 @@
 from flask_restplus import Resource
 
 from app.handlers.client_handler import ClientHandler
+from app.handlers.favorite_handler import FavoriteHandler
 from app.restplus import api
 from app.schemas.routes.client_schema import ClientSchemaRoute
+from app.schemas.routes.favorite_schema import FavoritesSchemaRoute
 
 ns = api.namespace(
     path="/clients", name="Clients", description="CRUD of the Clients."
 )
 
 schema = ClientSchemaRoute()
+schema_favorite = FavoritesSchemaRoute()
 
-parser_id = api.parser()
-parser_id.add_argument(
-    "_id",
+parser_client_id = api.parser()
+parser_client_id.add_argument(
+    "client_id",
     type=str,
     help="Client identifier of type UUID",
     location="path",
     required=True,
 )
 
-pagination = api.parser()
-pagination.add_argument(
+parser_favorite_id = api.parser()
+parser_favorite_id.add_argument(
+    "favorite_id",
+    type=str,
+    help="Favorite identifier of type UUID",
+    location="path",
+    required=True,
+)
+
+parser_client_favorite_id = api.parser()
+parser_client_favorite_id.add_argument(
+    "client_id",
+    type=str,
+    help="Client identifier of type UUID",
+    location="path",
+    required=True,
+)
+parser_client_favorite_id.add_argument(
+    "favorite_id",
+    type=str,
+    help="Favorite identifier of type UUID",
+    location="path",
+    required=True,
+)
+
+pagination_client = api.parser()
+pagination_client.add_argument(
     "page",
     type=int,
     help="Page searching the data",
@@ -28,7 +56,7 @@ pagination.add_argument(
     default=1,
     required=False,
 )
-pagination.add_argument(
+pagination_client.add_argument(
     "limit",
     type=int,
     help="Number of records to be returned per search",
@@ -38,8 +66,8 @@ pagination.add_argument(
 )
 
 
-@ns.route("/<_id>")
-@api.expect(parser_id)
+@ns.route("/<client_id>")
+@api.expect(parser_client_id)
 @api.response(code=400, description="bad_request")
 @api.response(code=404, description="not_found")
 @api.response(code=500, description="internal_error")
@@ -50,35 +78,35 @@ class ClientItem(Resource):
 
     @api.response(code=200, model=schema.response_client, description="success")
     @api.doc(security=True)
-    def get(self, _id):
+    def get(self, client_id):
         """
         Returns one registered client
         """
-        return self.handler.get_one(_id)
+        return self.handler.get_one(client_id)
 
     @api.response(code=200, model=schema.response_client, description="success")
     @api.doc(security=True, body=schema.client_item)
-    def put(self, _id):
+    def put(self, client_id):
         """
         Update one client and all required fields must be entered
         """
-        return self.handler.put_patch(_id=_id, partial=False)
+        return self.handler.put_patch(_id=client_id, partial=False)
 
     @api.response(code=200, description="success")
     @api.doc(security=True, body=schema.client_item)
-    def patch(self, _id):
+    def patch(self, client_id):
         """
         Update one client and you do not need to enter all fields
         """
-        return self.handler.put_patch(_id=_id, partial=True)
+        return self.handler.put_patch(_id=client_id, partial=True)
 
     @api.response(code=204, description="success")
     @api.doc(security=True)
-    def delete(self, _id):
+    def delete(self, client_id):
         """
         Delete one client
         """
-        return self.handler.delete(_id=_id)
+        return self.handler.delete(_id=client_id)
 
 
 @ns.route("")
@@ -91,7 +119,7 @@ class ClientCollection(Resource):
         self.handler = ClientHandler()
 
     @api.response(code=200, model=schema.response_pagination_client, description="success")
-    @api.doc(security=True, parser=pagination)
+    @api.doc(security=True, parser=pagination_client)
     def get(self):
         """
         Returns registered clients
@@ -105,3 +133,49 @@ class ClientCollection(Resource):
         Create one client
         """
         return self.handler.post()
+
+
+@ns.route("/<client_id>/favorites")
+@api.expect(parser_client_id)
+@api.response(code=400, description="bad_request")
+@api.response(code=404, description="not_found")
+@api.response(code=500, description="internal_error")
+class ClientIdFavorite(Resource):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.handler = FavoriteHandler()
+
+    @api.response(code=200, model=schema_favorite.response_pagination_favorite, description="success")
+    @api.doc(security=True, parser=pagination_client)
+    def get(self, client_id):
+        """
+        Get all favorites to client
+        """
+        return self.handler.get_all_by_client(client_id=client_id)
+
+    @api.response(code=201, model=schema_favorite.response_favorite, description="success")
+    @api.doc(security=True, body=schema_favorite.favorite_item)
+    def post(self, client_id):
+        """
+        Create favorite to client
+        """
+        return self.handler.post(client_id=client_id)
+
+
+@ns.route("/<client_id>/favorites/<favorite_id>")
+@api.expect(parser_client_favorite_id)
+@api.response(code=400, description="bad_request")
+@api.response(code=404, description="not_found")
+@api.response(code=500, description="internal_error")
+class ClientIdFavoriteId(Resource):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.handler = FavoriteHandler()
+
+    @api.response(code=204, description="success")
+    @api.doc(security=True)
+    def delete(self, client_id, favorite_id):
+        """
+        Delete one favorite
+        """
+        return self.handler.delete(_id=favorite_id, client_id=client_id)
