@@ -22,7 +22,13 @@ Para que haja efeito deve-se renomear o arquivo para `.env`.
 
 O banco de dados padrão para armazenamento dos dados é o `postgres`.
 
-Todo o projeto segue um padrão pré definido pelo pre-commit.
+Após fazer a configuração inicial, pode-se acessar as rotas do projeto pela URL `http://localhost:5000/docs`
+
+Na documentação há uma rota `/auth/register` que deve ser usada para fazer o primeiro cadastro no sistema.
+
+Após fazer o cadastro, deve-se utilizar a rota `/auth/login` para obter o token de acesso às demais rotas, este que deve ser injetado no header `authorization`.
+
+Será gerado dois tokens (access_token e refresh_token). Para acessar as rotas é recomendado utilizar somente o `access_token` e caso o mesmo expire, pode-se utilizar o `refresh_token` para obter um novo token. Todos os dois tokens tem uma vida útil de 15 e 30 minutos respectivamente.
 
 ## Configuração do ambiente <a name="cs2"></a>
 Iniciar ambiente virtual

@@ -55,7 +55,7 @@ class Config(object):
         "SERVICE_PRODUCTS", "http://challenge-api.luizalabs.com/api/product"
     )
 
-    TOKEN_ACCESS_EXP_MINUTES = int(os.getenv("TOKEN_ACCESS_EXP_MINUTES", "10"))
+    TOKEN_ACCESS_EXP_MINUTES = int(os.getenv("TOKEN_ACCESS_EXP_MINUTES", "15"))
     TOKEN_REFRESH_EXP_MINUTES = int(os.getenv("TOKEN_REFRESH_EXP_MINUTES", "30"))
 
 
