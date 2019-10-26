@@ -9,6 +9,7 @@ Todas as rotas são protegidas por um token JWT, este que deve ser obtido na rot
 2. [Informações adicionais](#cs1)
 3. [Configuração do ambiente](#cs2)
 4. [Comandos úteis](#cs3)
+4. [Tecnologias utilizadas](#cs4)
 
 ## Requisitos <a name="cs0"></a>
 - Python 3.x
@@ -63,7 +64,7 @@ Acessar a documentação (não disponível para o modo de produção)
 http://localhost:5000/docs
 ````
 
-#### Comandos úteis <a name="cs3"></a>
+## Comandos úteis <a name="cs3"></a>
 Rodar o lint para organização do código
 ````bash
 flask db commands lint
@@ -98,3 +99,16 @@ Rodar aplicação
 ````bash
 flask run
 ````
+
+## Técnologias utilizadas
+
+- Python: linguagem de programação utilizada no desenvolvimento do serviço;
+- Postgres: banco de dados relacional utilizado para armazenar os dados;
+- Git: tecnologia para controle de versão do código;
+- Flask: micro-framework para gerenciamento web;
+- SQLAlchemy: biblioteca de objeto-relacional para manipulação de SQL;
+- Marshmallow: biblioteca para validação de dados de entrada e saída;
+- Restplus: biblioteca para criação da documentação das rotas da aplicação;
+- Requests: biblioteca para realização de chamadas em outros sites/api's;
+- Radon: biblioteca para verificar a complexidade dos códigos;
+- Pre-commit: biblioteca que define os padrões do PEP 8, quando é feito um commit;
