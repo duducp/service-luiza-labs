@@ -9,7 +9,7 @@ from app.schemas.routes.client_schema import ClientSchemaRoute
 ns = api.namespace(
     path="/auth",
     name="Auth",
-    description="Manages the authorization part of system access",
+    description="Gerencia a parte de autorização do acesso ao sistema",
 )
 
 schema = AuthSchemaRoute()
@@ -29,7 +29,7 @@ class Login(Resource):
     @api.expect(schema.auth_request)
     def post(self):
         """
-        Log in to the system
+        Realiza o login do cliente no sistema
         """
         return self.handler.login()
 
@@ -47,7 +47,7 @@ class Register(Resource):
     @api.doc(security=False, body=schema_client.client_item)
     def post(self):
         """
-        Register client
+        Cadastra um novo cliente no sistema para o mesmo poder fazer o login posteriormente
         """
         return self.handler.post()
 
@@ -64,7 +64,7 @@ class Logout(Resource):
     @api.doc(security=["authorization"])
     def get(self):
         """
-        Log out of the system
+        Inválida os tokens do cliente quando o mesmo fazer logout no sistema
         """
         return self.handler.logout()
 
@@ -82,7 +82,7 @@ class Refresh(Resource):
     @api.doc(security=["authorization"])
     def get(self):
         """
-        Renew user token
+        Renova o token do cliente
         """
         return self.handler.refresh()
 
@@ -100,6 +100,6 @@ class ValidToken(Resource):
     @api.doc(security=["authorization"])
     def get(self):
         """
-        Checks if the token is valid
+        Verifica se o token é válido
         """
         return self.handler.valid()

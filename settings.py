@@ -19,7 +19,7 @@ class Config(object):
     SWAGGER_TITLE = os.getenv("SWAGGER_TITLE", "Service Client Luiza Labs")
     SWAGGER_DESCRIPTION = os.getenv(
         "SWAGGER_DESCRIPTION",
-        "This service is responsible for taking care of customers' favorite products",
+        "Este serviço é responsável por cuidar dos clientes e seus produtos favoritos",
     )
     SWAGGER_UI_DOC_EXPANSION = "list"  # None, "list", "full"
     RESTPLUS_VALIDATE = False

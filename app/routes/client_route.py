@@ -7,7 +7,7 @@ from app.restplus import api
 from app.schemas.routes.client_schema import ClientSchemaRoute
 from app.schemas.routes.favorite_schema import FavoritesSchemaRoute
 
-ns = api.namespace(path="/clients", name="Clients")
+ns = api.namespace(path="/clients", name="Clients", description="Gerencia os cliente e seus favoritos no sistema")
 
 schema = ClientSchemaRoute()
 schema_favorite = FavoritesSchemaRoute()
@@ -64,7 +64,7 @@ class ClientItem(Resource):
     @valid_token
     def get(self, client_id):
         """
-        Returns one registered client
+        Retorna os dados de um determinado cliente
         """
         return self.handler.get_one(client_id)
 
@@ -73,7 +73,7 @@ class ClientItem(Resource):
     @valid_token
     def put(self, client_id):
         """
-        Update one client and all required fields must be entered
+        Atualiza um cliente onde é nescessário informar todos os campos obrigatórios
         """
         return self.handler.put_patch(_id=client_id, partial=False)
 
@@ -82,7 +82,7 @@ class ClientItem(Resource):
     @valid_token
     def patch(self, client_id):
         """
-        Update one client and you do not need to enter all fields
+        Atualiza um cliente onde não é nescessário inserir todos os campos
         """
         return self.handler.put_patch(_id=client_id, partial=True)
 
@@ -91,7 +91,7 @@ class ClientItem(Resource):
     @valid_token
     def delete(self, client_id):
         """
-        Delete one client
+        Exclui de cliente
         """
         return self.handler.delete(_id=client_id)
 
@@ -112,7 +112,7 @@ class ClientCollection(Resource):
     @valid_token
     def get(self):
         """
-        Returns registered clients
+        Retorna todos os clientes cadastrados
         """
         return self.handler.get_all()
 
@@ -121,7 +121,7 @@ class ClientCollection(Resource):
     @valid_token
     def post(self):
         """
-        Create one client
+        Cadastra um cliente
         """
         return self.handler.post()
 
@@ -144,7 +144,7 @@ class ClientIdFavorite(Resource):
     @valid_token
     def get(self):
         """
-        Get all favorites to client
+        Busca todos favoritos do cliente logado
         """
         return self.handler.get_all_by_client()
 
@@ -155,7 +155,7 @@ class ClientIdFavorite(Resource):
     @valid_token
     def post(self):
         """
-        Create favorite to client
+        Cadastra um produto aos favoritos do cliente logado
         """
         return self.handler.post()
 
@@ -178,7 +178,7 @@ class ClientIdFavoriteDetails(Resource):
     @valid_token
     def get(self):
         """
-        Get all clients favorites and product details
+        Busca todos favoritos do cliente logado e os detalhes de cada produto
         """
         return self.handler.get_all_by_client_details_product()
 
@@ -198,6 +198,6 @@ class ClientIdFavoriteId(Resource):
     @valid_token
     def delete(self, favorite_id):
         """
-        Delete one favorite
+        Exclui um favorito do cliente logado
         """
         return self.handler.delete(_id=favorite_id)
