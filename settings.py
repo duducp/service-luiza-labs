@@ -35,20 +35,19 @@ class Config(object):
     DATABASE_PW = os.getenv("DATABASE_PW", "postgres")
     DATABASE_DB = os.getenv("DATABASE_DB", "luizalabs")
 
-    if DATABASE_ENGINE.lower() == "sqlite":
-        SQLALCHEMY_DATABASE_URI = "sqlite:///app.db"
-    else:
-        SQLALCHEMY_DATABASE_URI = f"{DATABASE_ENGINE}"
-        SQLALCHEMY_DATABASE_URI += f"://{DATABASE_USER}"
-        SQLALCHEMY_DATABASE_URI += f":{DATABASE_PW}"
-        SQLALCHEMY_DATABASE_URI += f"@{DATABASE_HOST}"
-        SQLALCHEMY_DATABASE_URI += f":{DATABASE_PORT}"
-        SQLALCHEMY_DATABASE_URI += f"/{DATABASE_DB}"
+    SQLALCHEMY_DATABASE_URI = f"{DATABASE_ENGINE}"
+    SQLALCHEMY_DATABASE_URI += f"://{DATABASE_USER}"
+    SQLALCHEMY_DATABASE_URI += f":{DATABASE_PW}"
+    SQLALCHEMY_DATABASE_URI += f"@{DATABASE_HOST}"
+    SQLALCHEMY_DATABASE_URI += f":{DATABASE_PORT}"
+    SQLALCHEMY_DATABASE_URI += f"/{DATABASE_DB}"
 
     # Redis
     REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
     REDIS_PORT = os.getenv("REDIS_PORT", "6379")
     REDIS_DB_AUTH = int(os.getenv("REDIS_DB_AUTH", "0"))
+    REDIS_DB_FAVORITE = int(os.getenv("REDIS_DB_FAVORITE", "1"))
+    REDIS_DB_FAVORITE_DETAILS_EXPIRE = int(os.getenv("REDIS_DB_FAVORITE_DETAILS_EXPIRE", "5"))
 
     # Others
     SERVICE_PRODUCTS = os.getenv(

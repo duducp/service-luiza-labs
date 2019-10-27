@@ -1,9 +1,11 @@
+import json
 from http import HTTPStatus
 
 from app import db
 
 import settings
 from app.models.favorite_model import FavoriteModel
+from app.persistence.redis_persistence import RedisPersistence
 from app.schemas.models.favorite_schema import FavoriteSchema
 from app.services.products_service import ProductService
 from app.utils.format_response import Response
@@ -14,22 +16,43 @@ class FavoriteController:
         self._config = settings.load_config()
         self._response = Response()
         self._product_service = ProductService()
+        self._redis = RedisPersistence(db=self._config.REDIS_DB_FAVORITE)
 
     def get_all_by_client(self, client_id: str, args: dict):
         try:
-            query = db.session.query(FavoriteModel).filter(
-                FavoriteModel.client_id == client_id
+            page = int(args.get("page", 1))
+            per_page = int(args.get("limit", 10))
+
+            favorites = self._redis.get(
+                name=f"f-{client_id}",
+                key=f"{page}-{per_page}"
             )
-            data = query.paginate(
-                page=int(args.get("page", 1)),
-                per_page=int(args.get("limit", 10)),
-                max_per_page=100,
-            )
+            if favorites:
+                favorites = json.loads(favorites)
+            else:
+                favorites = db.session.query(FavoriteModel).filter(
+                    FavoriteModel.client_id == client_id
+                ).paginate(
+                    page=page,
+                    per_page=per_page,
+                    max_per_page=100,
+                )
+
+                favorites = self._response.get_data_schema(
+                    schema=FavoriteSchema(many=True),
+                    data=favorites
+                )
+
+                self._redis.delete_name(f"f-{client_id}")
+                self._redis.set(
+                    name=f"f-{client_id}",
+                    key=f"{page}-{per_page}",
+                    value=favorites
+                )
 
             return self._response.send(
-                schema=FavoriteSchema(many=True),
                 status=HTTPStatus.OK,
-                data=data,
+                data=favorites,
                 code="success",
                 message="Favorites found successfully",
             )
@@ -38,36 +61,45 @@ class FavoriteController:
 
     def get_all_by_client_details_product(self, client_id: str, args: dict):
         try:
-            query = db.session.query(FavoriteModel).filter(
-                FavoriteModel.client_id == client_id
-            )
-            data_pagination = query.paginate(
-                page=int(args.get("page", 1)),
-                per_page=int(args.get("limit", 10)),
-                max_per_page=100,
-            )
+            page = int(args.get("page", 1))
+            per_page = int(args.get("limit", 10))
 
-            data = FavoriteSchema(many=True).dump(data_pagination.items).data
-            if data:
-                for item in data:
-                    product_id = item.get("product_id", "")
-                    if product_id:
-                        product = self._get_data_product(product_id)
-                        item["product"] = product
-                    else:
-                        item["product"] = {}
+            favorites = self._redis.get(
+                name=f"fd-{client_id}",
+                key=f"{page}-{per_page}"
+            )
+            if favorites:
+                favorites = json.loads(favorites)
+            else:
+                favorites = db.session.query(FavoriteModel).filter(
+                    FavoriteModel.client_id == client_id
+                ).paginate(
+                    page=page,
+                    per_page=per_page,
+                    max_per_page=100,
+                )
 
-            data = {
-                "results": data,
-                "page": data_pagination.page,
-                "size": data_pagination.per_page,
-                "total_items": data_pagination.total,
-                "total_pages": data_pagination.pages,
-            }
+                favorites = self._response.get_data_schema(
+                    schema=FavoriteSchema(many=True),
+                    data=favorites
+                )
+
+                for favorite in favorites.get('results', []):
+                    product_id = favorite.get("product_id", "")
+                    product = self._get_data_product(product_id=product_id)
+                    favorite["product"] = product
+
+                self._redis.delete_name(f"fd-{client_id}")
+                self._redis.set_expires(
+                    key=f"{page}-{per_page}",
+                    name=f"fd-{client_id}",
+                    value=favorites,
+                    expires_minutes=self._config.REDIS_DB_FAVORITE_DETAILS_EXPIRE
+                )
 
             return self._response.send(
                 status=HTTPStatus.OK,
-                data=data,
+                data=favorites,
                 code="success",
                 message="Favorites found successfully",
             )
@@ -78,6 +110,9 @@ class FavoriteController:
         try:
             db.session.add(data)
             db.session.commit()
+
+            self._redis.delete_name(f"f-{str(data.client_id)}")
+            self._redis.delete_name(f"fd-{str(data.client_id)}")
 
             return self._response.send(
                 schema=FavoriteSchema(),
@@ -101,6 +136,9 @@ class FavoriteController:
                 .delete()
             )
             db.session.commit()
+
+            self._redis.delete_name(f"f-{client_id}")
+            self._redis.delete_name(f"fd-{client_id}")
 
             return self._response.send(
                 data=None,

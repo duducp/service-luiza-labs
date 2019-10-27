@@ -30,6 +30,7 @@ class JwtUtils:
         )
 
         self._redis.set_expires(
+            name=jti_access,
             key=jti_access,
             value=json.dumps({"valid": True, "token": access_token}),
             expires_minutes=self._config.TOKEN_ACCESS_EXP_MINUTES,
@@ -44,6 +45,7 @@ class JwtUtils:
         )
 
         self._redis.set_expires(
+            name=jti_refresh,
             key=jti_refresh,
             value=json.dumps({"valid": True, "token": refresh_token}),
             expires_minutes=self._config.TOKEN_REFRESH_EXP_MINUTES,
@@ -107,9 +109,9 @@ class JwtUtils:
             if token:
                 token = json.loads(token)
                 token["valid"] = False
-                self._redis.delete(key, key)
+                self._redis.delete_key(key, key)
                 self._redis.set_expires(
-                    key=key, value=token, expires_minutes=expires_minutes
+                    name=key, key=key, value=token, expires_minutes=expires_minutes
                 )
             return True
         except Exception as e:

@@ -30,22 +30,6 @@ parser_favorite_id.add_argument(
     required=True,
 )
 
-parser_client_favorite_id = api.parser()
-parser_client_favorite_id.add_argument(
-    "client_id",
-    type=str,
-    help="Client identifier of type UUID",
-    location="path",
-    required=True,
-)
-parser_client_favorite_id.add_argument(
-    "favorite_id",
-    type=str,
-    help="Favorite identifier of type UUID",
-    location="path",
-    required=True,
-)
-
 pagination_client = api.parser()
 pagination_client.add_argument(
     "page",
@@ -142,8 +126,7 @@ class ClientCollection(Resource):
         return self.handler.post()
 
 
-@ns.route("/<client_id>/favorites")
-@api.expect(parser_client_id)
+@ns.route("/favorites")
 @api.response(code=400, description="bad_request")
 @api.response(code=404, description="not_found")
 @api.response(code=500, description="internal_error")
@@ -159,26 +142,25 @@ class ClientIdFavorite(Resource):
     )
     @api.doc(security=True, parser=pagination_client)
     @valid_token
-    def get(self, client_id):
+    def get(self):
         """
         Get all favorites to client
         """
-        return self.handler.get_all_by_client(client_id=client_id)
+        return self.handler.get_all_by_client()
 
     @api.response(
         code=201, model=schema_favorite.response_favorite, description="success"
     )
     @api.doc(security=True, body=schema_favorite.favorite_item)
     @valid_token
-    def post(self, client_id):
+    def post(self):
         """
         Create favorite to client
         """
-        return self.handler.post(client_id=client_id)
+        return self.handler.post()
 
 
-@ns.route("/<client_id>/favorites/details")
-@api.expect(parser_client_id)
+@ns.route("/favorites/details")
 @api.response(code=400, description="bad_request")
 @api.response(code=404, description="not_found")
 @api.response(code=500, description="internal_error")
@@ -194,15 +176,15 @@ class ClientIdFavoriteDetails(Resource):
     )
     @api.doc(security=True, parser=pagination_client)
     @valid_token
-    def get(self, client_id):
+    def get(self):
         """
         Get all clients favorites and product details
         """
-        return self.handler.get_all_by_client_details_product(client_id=client_id)
+        return self.handler.get_all_by_client_details_product()
 
 
-@ns.route("/<client_id>/favorites/<favorite_id>")
-@api.expect(parser_client_favorite_id)
+@ns.route("/favorites/<favorite_id>")
+@api.expect(parser_favorite_id)
 @api.response(code=400, description="bad_request")
 @api.response(code=404, description="not_found")
 @api.response(code=500, description="internal_error")
@@ -214,8 +196,8 @@ class ClientIdFavoriteId(Resource):
     @api.response(code=204, description="success")
     @api.doc(security=True)
     @valid_token
-    def delete(self, client_id, favorite_id):
+    def delete(self, favorite_id):
         """
         Delete one favorite
         """
-        return self.handler.delete(_id=favorite_id, client_id=client_id)
+        return self.handler.delete(_id=favorite_id)

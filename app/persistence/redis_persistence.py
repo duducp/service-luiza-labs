@@ -44,15 +44,15 @@ class RedisPersistence(object):
             logger.error(f"Error testing Redis ping. ERROR ---> {str(ex)}")
             raise Exception(ex)
 
-    def set_expires(self, key: str, value: str, expires_minutes: float) -> None:
+    def set_expires(self, key: str, name: str, value: str, expires_minutes: float) -> None:
         try:
             if not isinstance(value, str):
                 value = json.dumps(value)
 
             expires = expires_minutes * 60
 
-            self.conn.hset(name=key, key=key, value=value)
-            self.conn.expire(name=key, time=expires)
+            self.conn.hset(name=name, key=key, value=value)
+            self.conn.expire(name=name, time=expires)
         except Exception as ex:
             logger.error(
                 f"Error saving value with expires in Redis. ERROR ---> {str(ex)}"
@@ -83,9 +83,16 @@ class RedisPersistence(object):
             logger.error(f"Error getting all values in Redis. ERROR ---> {str(ex)}")
             raise Exception(ex)
 
-    def delete(self, name: str, key: str) -> None:
+    def delete_key(self, name: str, key: str) -> None:
         try:
             self.conn.hdel(name, key)
+        except Exception as ex:
+            logger.error(f"Error deleting value in Redis. ERROR ---> {str(ex)}")
+            raise Exception(ex)
+
+    def delete_name(self, *names) -> None:
+        try:
+            self.conn.delete(*names)
         except Exception as ex:
             logger.error(f"Error deleting value in Redis. ERROR ---> {str(ex)}")
             raise Exception(ex)

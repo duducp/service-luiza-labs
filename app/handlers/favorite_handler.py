@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, session
 from logzero import logger
 
 from app import db
@@ -14,22 +14,23 @@ class FavoriteHandler:
         self._controller = FavoriteController()
         self._response = Response()
         self._product_service = ProductService()
+        self._client_id = session.get('client_id')
 
-    def get_all_by_client(self, client_id: str):
+    def get_all_by_client(self):
         args = request.args.to_dict()
-        return self._controller.get_all_by_client(args=args, client_id=client_id)
+        return self._controller.get_all_by_client(args=args, client_id=self._client_id)
 
-    def get_all_by_client_details_product(self, client_id: str):
+    def get_all_by_client_details_product(self):
         args = request.args.to_dict()
         return self._controller.get_all_by_client_details_product(
-            args=args, client_id=client_id
+            args=args, client_id=self._client_id
         )
 
-    def delete(self, _id: str, client_id: str):
+    def delete(self, _id: str):
         favorite = (
             db.session.query(FavoriteModel)
             .filter(FavoriteModel.id == _id)
-            .filter(FavoriteModel.client_id == client_id)
+            .filter(FavoriteModel.client_id == self._client_id)
             .first()
         )
         if not favorite:
@@ -39,11 +40,11 @@ class FavoriteHandler:
                 code="favorite_not_found",
             )
 
-        return self._controller.delete(_id=_id, client_id=client_id)
+        return self._controller.delete(_id=_id, client_id=self._client_id)
 
-    def post(self, client_id: str):
+    def post(self):
         body = request.get_json(silent=True, force=True)
-        body["client_id"] = client_id
+        body["client_id"] = self._client_id
 
         data, errors = FavoriteSchema().load(data=body)
         if errors:
