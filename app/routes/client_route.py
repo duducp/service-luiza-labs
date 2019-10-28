@@ -12,6 +12,22 @@ ns = api.namespace(path="/clients", name="Clients", description="Gerencia os cli
 schema = ClientSchemaRoute()
 schema_favorite = FavoritesSchemaRoute()
 
+parser_client_favorite_id = api.parser()
+parser_client_favorite_id.add_argument(
+    "client_id",
+    type=str,
+    help="Client identifier of type UUID",
+    location="path",
+    required=True,
+)
+parser_client_favorite_id.add_argument(
+    "favorite_id",
+    type=str,
+    help="Favorite identifier of type UUID",
+    location="path",
+    required=True,
+)
+
 parser_client_id = api.parser()
 parser_client_id.add_argument(
     "client_id",
@@ -126,7 +142,8 @@ class ClientCollection(Resource):
         return self.handler.post()
 
 
-@ns.route("/favorites")
+@ns.route("/<client_id>/favorites")
+@api.expect(parser_client_id)
 @api.response(code=400, description="bad_request")
 @api.response(code=404, description="not_found")
 @api.response(code=500, description="internal_error")
@@ -142,25 +159,26 @@ class ClientIdFavorite(Resource):
     )
     @api.doc(security=True, parser=pagination_client)
     @valid_token
-    def get(self):
+    def get(self, client_id):
         """
         Busca todos favoritos do cliente logado
         """
-        return self.handler.get_all_by_client()
+        return self.handler.get_all_by_client(client_id=client_id)
 
     @api.response(
         code=201, model=schema_favorite.response_favorite, description="success"
     )
     @api.doc(security=True, body=schema_favorite.favorite_item)
     @valid_token
-    def post(self):
+    def post(self, client_id):
         """
         Cadastra um produto aos favoritos do cliente logado
         """
-        return self.handler.post()
+        return self.handler.post(client_id=client_id)
 
 
-@ns.route("/favorites/details")
+@ns.route("/<client_id>/favorites/details")
+@api.expect(parser_client_id)
 @api.response(code=400, description="bad_request")
 @api.response(code=404, description="not_found")
 @api.response(code=500, description="internal_error")
@@ -176,14 +194,15 @@ class ClientIdFavoriteDetails(Resource):
     )
     @api.doc(security=True, parser=pagination_client)
     @valid_token
-    def get(self):
+    def get(self, client_id):
         """
         Busca todos favoritos do cliente logado e os detalhes de cada produto
         """
-        return self.handler.get_all_by_client_details_product()
+        return self.handler.get_all_by_client_details_product(client_id=client_id)
 
 
-@ns.route("/favorites/<favorite_id>")
+@ns.route("/<client_id>/favorites/<favorite_id>")
+@api.expect(parser_client_favorite_id)
 @api.expect(parser_favorite_id)
 @api.response(code=400, description="bad_request")
 @api.response(code=404, description="not_found")
@@ -196,8 +215,8 @@ class ClientIdFavoriteId(Resource):
     @api.response(code=204, description="success")
     @api.doc(security=True)
     @valid_token
-    def delete(self, favorite_id):
+    def delete(self, client_id, favorite_id):
         """
         Exclui um favorito do cliente logado
         """
-        return self.handler.delete(_id=favorite_id)
+        return self.handler.delete(_id=favorite_id, client_id=client_id)
