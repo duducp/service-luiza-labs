@@ -1,4 +1,4 @@
-from flask import request, session
+from flask import request
 from logzero import logger
 
 from app import db

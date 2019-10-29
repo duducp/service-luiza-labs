@@ -26,12 +26,7 @@ class Response:
             data = self.get_data_schema(schema=schema, data=data)
             data = json.loads(json.dumps(data, default=format_encoder_object))
 
-        data = {
-            "status": status,
-            "message": message,
-            "code": code,
-            "data": data,
-        }
+        data = {"status": status, "message": message, "code": code, "data": data}
 
         headers = self.__format_headers(headers)
         return make_response(json.dumps(data), status, headers)

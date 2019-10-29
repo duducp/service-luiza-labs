@@ -23,31 +23,23 @@ class FavoriteController:
             page = int(args.get("page", 1))
             per_page = int(args.get("limit", 10))
 
-            favorites = self._redis.get(
-                name=f"f-{client_id}",
-                key=f"{page}-{per_page}"
-            )
+            favorites = self._redis.get(name=f"f-{client_id}", key=f"{page}-{per_page}")
             if favorites:
                 favorites = json.loads(favorites)
             else:
-                favorites = db.session.query(FavoriteModel).filter(
-                    FavoriteModel.client_id == client_id
-                ).paginate(
-                    page=page,
-                    per_page=per_page,
-                    max_per_page=100,
+                favorites = (
+                    db.session.query(FavoriteModel)
+                    .filter(FavoriteModel.client_id == client_id)
+                    .paginate(page=page, per_page=per_page, max_per_page=100)
                 )
 
                 favorites = self._response.get_data_schema(
-                    schema=FavoriteSchema(many=True),
-                    data=favorites
+                    schema=FavoriteSchema(many=True), data=favorites
                 )
 
                 self._redis.delete_name(f"f-{client_id}")
                 self._redis.set(
-                    name=f"f-{client_id}",
-                    key=f"{page}-{per_page}",
-                    value=favorites
+                    name=f"f-{client_id}", key=f"{page}-{per_page}", value=favorites
                 )
 
             return self._response.send(
@@ -65,26 +57,22 @@ class FavoriteController:
             per_page = int(args.get("limit", 10))
 
             favorites = self._redis.get(
-                name=f"fd-{client_id}",
-                key=f"{page}-{per_page}"
+                name=f"fd-{client_id}", key=f"{page}-{per_page}"
             )
             if favorites:
                 favorites = json.loads(favorites)
             else:
-                favorites = db.session.query(FavoriteModel).filter(
-                    FavoriteModel.client_id == client_id
-                ).paginate(
-                    page=page,
-                    per_page=per_page,
-                    max_per_page=100,
+                favorites = (
+                    db.session.query(FavoriteModel)
+                    .filter(FavoriteModel.client_id == client_id)
+                    .paginate(page=page, per_page=per_page, max_per_page=100)
                 )
 
                 favorites = self._response.get_data_schema(
-                    schema=FavoriteSchema(many=True),
-                    data=favorites
+                    schema=FavoriteSchema(many=True), data=favorites
                 )
 
-                for favorite in favorites.get('results', []):
+                for favorite in favorites.get("results", []):
                     product_id = favorite.get("product_id", "")
                     product = self._get_data_product(product_id=product_id)
                     favorite["product"] = product
@@ -94,7 +82,7 @@ class FavoriteController:
                     key=f"{page}-{per_page}",
                     name=f"fd-{client_id}",
                     value=favorites,
-                    expires_minutes=self._config.REDIS_DB_FAVORITE_DETAILS_EXPIRE
+                    expires_minutes=self._config.REDIS_DB_FAVORITE_DETAILS_EXPIRE,
                 )
 
             return self._response.send(

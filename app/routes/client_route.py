@@ -7,7 +7,11 @@ from app.restplus import api
 from app.schemas.routes.client_schema import ClientSchemaRoute
 from app.schemas.routes.favorite_schema import FavoritesSchemaRoute
 
-ns = api.namespace(path="/clients", name="Clients", description="Gerencia os cliente e seus favoritos no sistema")
+ns = api.namespace(
+    path="/clients",
+    name="Clients",
+    description="Gerencia os cliente e seus favoritos no sistema",
+)
 
 schema = ClientSchemaRoute()
 schema_favorite = FavoritesSchemaRoute()

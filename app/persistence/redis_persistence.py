@@ -44,7 +44,9 @@ class RedisPersistence(object):
             logger.error(f"Error testing Redis ping. ERROR ---> {str(ex)}")
             raise Exception(ex)
 
-    def set_expires(self, key: str, name: str, value: str, expires_minutes: float) -> None:
+    def set_expires(
+        self, key: str, name: str, value: str, expires_minutes: float
+    ) -> None:
         try:
             if not isinstance(value, str):
                 value = json.dumps(value)

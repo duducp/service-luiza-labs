@@ -74,27 +74,32 @@ http://localhost:5000/docs
 ## Comandos úteis <a name="cs3"></a>
 Rodar o lint para organização do código
 ````bash
-flask db commands lint
+flask commands lint
 ````
 
 Rodar o teste de complexidade do código
 ````bash
-flask db commands complexity
+flask commands complexity
+````
+
+Rodar testes de coverage
+````bash
+flask commands coverage
 ````
 
 Criar um database no Postgres
 ````bash
-flask db config create-db NOME_DATABASE
-````
-
-Ver todas as rotas da aplicação
-````bash
-flask routes
+flask config create-db NOME_DATABASE
 ````
 
 Ver comandos do database
 ````bash
 flask db
+````
+
+Ver todas as rotas da aplicação
+````bash
+flask routes
 ````
 
 Rodar aplicação

@@ -6,7 +6,7 @@ load_dotenv(verbose=True)
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
-class Config(object):
+class BaseConfig(object):
     ENVIRONMENT = os.getenv("ENVIRONMENT", "")
 
     # Flask
@@ -47,7 +47,9 @@ class Config(object):
     REDIS_PORT = os.getenv("REDIS_PORT", "6379")
     REDIS_DB_AUTH = int(os.getenv("REDIS_DB_AUTH", "0"))
     REDIS_DB_FAVORITE = int(os.getenv("REDIS_DB_FAVORITE", "1"))
-    REDIS_DB_FAVORITE_DETAILS_EXPIRE = int(os.getenv("REDIS_DB_FAVORITE_DETAILS_EXPIRE", "5"))
+    REDIS_DB_FAVORITE_DETAILS_EXPIRE = int(
+        os.getenv("REDIS_DB_FAVORITE_DETAILS_EXPIRE", "5")
+    )
 
     # Others
     SERVICE_PRODUCTS = os.getenv(
@@ -58,7 +60,7 @@ class Config(object):
     TOKEN_REFRESH_EXP_MINUTES = int(os.getenv("TOKEN_REFRESH_EXP_MINUTES", "30"))
 
 
-class Development(Config):
+class Development(BaseConfig):
     ENVIRONMENT_NAME = os.getenv("ENVIRONMENT_NAME", "DESENVOLVIMENTO")
     SWAGGER_VISIBLE = os.getenv("SWAGGER_VISIBLE", True)
     SQLALCHEMY_TRACK_MODIFICATIONS = os.getenv("SQLALCHEMY_TRACK_MODIFICATIONS", True)
@@ -68,17 +70,7 @@ class Development(Config):
     FLASK_ENV = os.getenv("FLASK_ENV", "development")
 
 
-class Staging(Config):
-    ENVIRONMENT_NAME = os.getenv("ENVIRONMENT_NAME", "HOMOLOGAÇÃO")
-    SWAGGER_VISIBLE = os.getenv("SWAGGER_VISIBLE", True)
-    SQLALCHEMY_TRACK_MODIFICATIONS = os.getenv("SQLALCHEMY_TRACK_MODIFICATIONS", False)
-    SQLALCHEMY_ECHO = os.getenv("SQLALCHEMY_ECHO", False)
-    DEBUG = os.getenv("DEBUG", False)
-    TESTING = os.getenv("TESTING", True)
-    FLASK_ENV = os.getenv("FLASK_ENV", "testing")
-
-
-class Production(Config):
+class Production(BaseConfig):
     ENVIRONMENT_NAME = os.getenv("ENVIRONMENT_NAME", "PRODUÇÃO")
     SWAGGER_VISIBLE = os.getenv("SWAGGER_VISIBLE", False)
     SQLALCHEMY_TRACK_MODIFICATIONS = os.getenv("SQLALCHEMY_TRACK_MODIFICATIONS", False)
@@ -88,13 +80,25 @@ class Production(Config):
     FLASK_ENV = os.getenv("FLASK_ENV", "production")
 
 
+class Testing(BaseConfig):
+    ENVIRONMENT_NAME = os.getenv("ENVIRONMENT_NAME", "TESTE")
+    SWAGGER_VISIBLE = os.getenv("SWAGGER_VISIBLE", False)
+    SQLALCHEMY_TRACK_MODIFICATIONS = os.getenv("SQLALCHEMY_TRACK_MODIFICATIONS", True)
+    SQLALCHEMY_ECHO = os.getenv("SQLALCHEMY_ECHO", True)
+    DEBUG = os.getenv("DEBUG", False)
+    TESTING = os.getenv("TESTING", True)
+    FLASK_ENV = os.getenv("FLASK_ENV", "testing")
+    CSRF_ENABLED = os.getenv("CSRF_ENABLED", False)
+
+
 def load_config():
     envs = {
         "develop": Development,
         "development": Development,
-        "staging": Staging,
+        "testing": Testing,
+        "test": Testing,
         "production": Production,
         "master": Production,
     }
 
-    return envs.get(Config.ENVIRONMENT, Development)
+    return envs.get(BaseConfig.ENVIRONMENT, Development)
