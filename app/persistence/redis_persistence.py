@@ -24,7 +24,7 @@ class RedisPersistence(object):
             host=self._host,
             port=self._port,
             db=self._db,
-            charset="utf-8",
+            encoding="utf-8",
             decode_responses=True,
         )
 

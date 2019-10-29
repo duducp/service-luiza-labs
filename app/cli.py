@@ -28,7 +28,7 @@ def configuration(app):
             database_uri += f":{app.config.get('DATABASE_PORT')}"
 
             database_uri2 = database_uri
-            database_uri2 += f"/postgres"
+            database_uri2 += "/postgres"
 
             command = f"create database {name}"
             try:
