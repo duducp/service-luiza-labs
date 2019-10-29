@@ -1,4 +1,6 @@
+import sqlalchemy
 from flask_testing import TestCase
+from logzero import logger
 
 import settings
 from app import app
@@ -12,6 +14,8 @@ class BaseTestCase(TestCase):
         return app
 
     def setUp(self):
+        self._create_database(name=settings.Testing.DATABASE_DB)
+
         db.create_all()
 
         client = ClientModel()
@@ -24,3 +28,28 @@ class BaseTestCase(TestCase):
     def tearDown(self):
         db.session.remove()
         db.drop_all()
+
+    def _create_database(self, name):
+        try:
+            database_uri = f"{app.config.get('DATABASE_ENGINE')}"
+            database_uri += f"://{app.config.get('DATABASE_USER')}"
+            database_uri += f":{app.config.get('DATABASE_PW')}"
+            database_uri += f"@{app.config.get('DATABASE_HOST')}"
+            database_uri += f":{app.config.get('DATABASE_PORT')}"
+
+            command = f"create database {name}"
+            try:
+                self._execute_command_postgres(database_uri, command)
+            except Exception:
+                database_uri += "/postgres"
+                self._execute_command_postgres(database_uri, command)
+        except Exception as e:
+            logger.info(f"Could not create database. Reason: {str(e)}")
+
+    @staticmethod
+    def _execute_command_postgres(database_uri, command):
+        engine = sqlalchemy.create_engine(database_uri)
+        conn = engine.connect()
+        conn.execute("commit")
+        conn.execute(command)
+        conn.close()
