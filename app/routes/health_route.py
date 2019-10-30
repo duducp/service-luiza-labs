@@ -23,6 +23,6 @@ class HealthCollection(Resource):
     @api.response(code=200, model=schema.response_health, description="success")
     def get(self):
         """
-        Returns registered health
+        Retorna a saúde do serviço
         """
         return self.health.get()
