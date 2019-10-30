@@ -31,6 +31,8 @@ class ClientController:
             )
         except Exception as e:
             raise e
+        finally:
+            db.session.close()
 
     def get_one(self, _id: str):
         try:
@@ -51,6 +53,8 @@ class ClientController:
             )
         except Exception as e:
             raise e
+        finally:
+            db.session.close()
 
     def post(self, data: ClientModel):
         try:

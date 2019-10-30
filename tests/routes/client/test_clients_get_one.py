@@ -63,6 +63,37 @@ class ClientTestCase(BaseTestCase):
         )
         self.assertIn("application/json", response.content_type)
 
+    def test_status_notfound(self):
+        self.login()
+
+        response = self.client.get(
+            "/clients/5945d7a6-306e-4f55-97e1-7a96de89d8f8",
+            headers={
+                "authorization": self.authorization,
+                "content-type": "application/json",
+            },
+        )
+        self.assertEqual(response.status_code, 404)
+
+    def test_response_notfound(self):
+        self.login()
+
+        expected_text_response = {
+            "status": 404,
+            "message": "Client '5945d7a6-306e-4f55-97e1-7a96de89d8f8' not found",
+            "code": "not_found",
+            "data": None,
+        }
+
+        response = self.client.get(
+            "/clients/5945d7a6-306e-4f55-97e1-7a96de89d8f8",
+            headers={
+                "authorization": self.authorization,
+                "content-type": "application/json",
+            },
+        )
+        self.assertEqual(response.json, expected_text_response)
+
 
 if __name__ == "__main__":
     unittest.main()

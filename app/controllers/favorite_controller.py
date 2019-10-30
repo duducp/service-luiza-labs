@@ -50,6 +50,8 @@ class FavoriteController:
             )
         except Exception as e:
             raise e
+        finally:
+            db.session.close()
 
     def get_all_by_client_details_product(self, client_id: str, args: dict):
         try:
@@ -93,6 +95,8 @@ class FavoriteController:
             )
         except Exception as e:
             raise e
+        finally:
+            db.session.close()
 
     def post(self, data: FavoriteModel):
         try:

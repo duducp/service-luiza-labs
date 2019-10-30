@@ -40,6 +40,18 @@ class ClientTestCase(BaseTestCase):
         )
         self.assertIn("application/json", response.content_type)
 
+    def test_status_notfound(self):
+        self.login()
+
+        response = self.client.delete(
+            "/clients/5945d7a6-306e-4f55-97e1-7a96de89d8f8",
+            headers={
+                "authorization": self.authorization,
+                "content-type": "application/json",
+            },
+        )
+        self.assertEqual(response.status_code, 204)
+
 
 if __name__ == "__main__":
     unittest.main()
