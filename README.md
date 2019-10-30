@@ -13,7 +13,7 @@ Todas as rotas são protegidas por um token JWT, este que deve ser obtido na rot
 6. [Imagens](#cs5)
 
 ## Requisitos <a name="cs0"></a>
-- Python 3.x
+- Python 3.7.6
 - Postgres
 - Redis
 
