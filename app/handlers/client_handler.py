@@ -1,5 +1,6 @@
 from flask import request
 
+from app.database import db
 from app.controllers.client_controller import ClientController
 from app.models.client_model import ClientModel
 from app.schemas.models.client_schema import ClientSchema
@@ -19,6 +20,14 @@ class ClientHandler:
         return self._controller.get_one(_id=_id)
 
     def delete(self, _id: str):
+        favorite = db.session.query(ClientModel).filter(ClientModel.id == _id).first()
+        if not favorite:
+            return self._response.send(
+                status=404,
+                message="Client ID you entered could not be found",
+                code="client_not_found",
+            )
+
         return self._controller.delete(_id=_id)
 
     def post(self):

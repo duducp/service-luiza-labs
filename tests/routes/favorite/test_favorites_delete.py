@@ -16,11 +16,23 @@ class ClientTestCase(BaseTestCase):
             data = response.json.get("data", {})
             self.authorization = data.get("access_token", "")
 
+    def add_favorite(self):
+        response = self.client.post(
+            "/clients/5945d7a6-306e-4f55-97e1-7a96de89d8d7/favorites",
+            json={"product_id": "1bf0f365-fbdd-4e21-9786-da459d78dd1f"},
+            content_type="application/json",
+            headers={"authorization": self.authorization},
+        )
+        self.favorite_id = ""
+        if response.status_code == 201:
+            self.favorite_id = response.json.get("data", {}).get("id", "")
+
     def test_status_success(self):
         self.login()
+        self.add_favorite()
 
         response = self.client.delete(
-            "/clients/5945d7a6-306e-4f55-97e1-7a96de89d8d7",
+            f"/clients/5945d7a6-306e-4f55-97e1-7a96de89d8d7/favorites/{self.favorite_id}",
             headers={
                 "authorization": self.authorization,
                 "content-type": "application/json",
@@ -30,9 +42,10 @@ class ClientTestCase(BaseTestCase):
 
     def test_content_type_success(self):
         self.login()
+        self.add_favorite()
 
         response = self.client.delete(
-            "/clients/5945d7a6-306e-4f55-97e1-7a96de89d8d7",
+            f"/clients/5945d7a6-306e-4f55-97e1-7a96de89d8d7/favorites/{self.favorite_id}",
             headers={
                 "authorization": self.authorization,
                 "content-type": "application/json",
@@ -44,7 +57,7 @@ class ClientTestCase(BaseTestCase):
         self.login()
 
         response = self.client.delete(
-            "/clients/5945d7a6-306e-4f55-97e1-7a96de89d8f8",
+            "/clients/5945d7a6-306e-4f55-97e1-7a96de89d8d7/favorites/5945d7a6-306e-4f55-97e1-7a96de89d8d7",
             headers={
                 "authorization": self.authorization,
                 "content-type": "application/json",
@@ -57,13 +70,13 @@ class ClientTestCase(BaseTestCase):
 
         expected_text_response = {
             "status": 404,
-            "message": "Client ID you entered could not be found",
-            "code": "client_not_found",
+            "message": "Favorite ID you entered could not be found",
+            "code": "favorite_not_found",
             "data": None,
         }
 
         response = self.client.delete(
-            "/clients/5945d7a6-306e-4f55-97e1-7a96de89d8f8",
+            "/clients/5945d7a6-306e-4f55-97e1-7a96de89d8d7/favorites/5945d7a6-306e-4f55-97e1-7a96de89d8d7",
             headers={
                 "authorization": self.authorization,
                 "content-type": "application/json",
