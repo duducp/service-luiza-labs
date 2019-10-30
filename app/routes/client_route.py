@@ -165,7 +165,7 @@ class ClientIdFavorite(Resource):
     @valid_token
     def get(self, client_id):
         """
-        Busca todos favoritos do cliente logado
+        Busca todos os produtos favoritos do cliente
         """
         return self.handler.get_all_by_client(client_id=client_id)
 
@@ -176,7 +176,7 @@ class ClientIdFavorite(Resource):
     @valid_token
     def post(self, client_id):
         """
-        Cadastra um produto aos favoritos do cliente logado
+        Cadastra um produto aos favoritos do cliente
         """
         return self.handler.post(client_id=client_id)
 
@@ -200,7 +200,7 @@ class ClientIdFavoriteDetails(Resource):
     @valid_token
     def get(self, client_id):
         """
-        Busca todos favoritos do cliente logado e os detalhes de cada produto
+        Busca todos os produtos favoritos do cliente e os detalhes de cada produto
         """
         return self.handler.get_all_by_client_details_product(client_id=client_id)
 
@@ -221,6 +221,6 @@ class ClientIdFavoriteId(Resource):
     @valid_token
     def delete(self, client_id, favorite_id):
         """
-        Exclui um favorito do cliente logado
+        Exclui um produto favorito do cliente
         """
         return self.handler.delete(_id=favorite_id, client_id=client_id)
