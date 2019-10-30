@@ -71,6 +71,12 @@ Acessar a documentação (não disponível para o modo de produção)
 http://localhost:5000/docs
 ````
 
+Rodar testes de TDD para obter taxa de coverage
+````bash
+flask commands coverage
+````
+Obs.: Antes de executar o comando acima verifique se a aplicação está apontada para o banco de teste
+
 ## Comandos úteis <a name="cs3"></a>
 Rodar o lint para organização do código
 ````bash
