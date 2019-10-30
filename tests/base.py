@@ -19,6 +19,7 @@ class BaseTestCase(TestCase):
         db.create_all()
 
         client = ClientModel()
+        client.id = "5945d7a6-306e-4f55-97e1-7a96de89d8d7"
         client.name = "admin"
         client.email = "admin@luizalabs.com"
 
