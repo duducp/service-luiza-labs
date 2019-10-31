@@ -31,18 +31,26 @@ class RedisPersistence(object):
     @property
     def get_instance(self):
         rw = Singleton()
-        rw.conn = self.connection_database
-        return rw.conn
+
+        try:
+            self.test_ping(conn=rw.conn_redis)
+        except Exception:
+            rw.conn_redis = self.connection_database
+
+        return rw.conn_redis
 
     def close_connection(self):
         self.conn.close()
 
-    def test_ping(self) -> bool:
+    def test_ping(self, conn=None) -> bool:
         try:
-            return self.conn.ping()
+            if conn is None:
+                conn = self.conn
+
+            return conn.ping()
         except Exception as ex:
             logger.error(f"Error testing Redis ping. ERROR ---> {str(ex)}")
-            raise Exception(ex)
+            raise ex
 
     def set_expires(
         self, key: str, name: str, value: str, expires_minutes: float
